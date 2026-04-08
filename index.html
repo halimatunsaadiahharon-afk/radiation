@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+
+    <title>Perasmian - Majlis Sambutan Hari Penolong Pegawai Perubatan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,600&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS UTAMA --- */
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            font-family: 'Montserrat', sans-serif; 
+            overflow: hidden; 
+            background: #000; 
+            color: #fff; 
+            cursor: pointer; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        #setup-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 9999; 
+            display: flex; justify-content: center; align-items: center; 
+        }
+
+        #exit-btn {
+            position: fixed; top: 20px; right: 20px; z-index: 10000;
+            width: 40px; height: 40px; background: rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50%;
+            color: white; font-family: sans-serif; font-weight: bold; font-size: 1.2rem;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; opacity: 0; transition: opacity 1s;
+        }
+
+        #main-container { 
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; 
+            z-index: 10; display: flex; justify-content: center; align-items: center; 
+            background: #000;
+        }
+
+        .fullscreen-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            background-color: #000;
+            display: none; 
+            z-index: 1;
+        }
+
+        /* --- FASA TERAKHIR: OFFICIAL CARD STYLE (TEMA DENIM + GAMBAR 35%) --- */
+        #official-card-container { 
+            display: none; opacity: 0; transition: opacity 1.5s; 
+            width: 100%; height: 100%; 
+            justify-content: center; align-items: center; 
+            position: absolute; top: 0; left: 0; z-index: 5;
+            background-color: #0c1424; 
+            background-image: radial-gradient(circle at center, #1a2a42 0%, #0c1424 100%);
+        }
+        
+        .official-card {
+            background: linear-gradient(135deg, #1c304f 0%, #112036 100%);
+            box-shadow: 
+                5px 5px 20px rgba(0, 0, 0, 0.8), 
+                inset 0 0 60px rgba(0, 0, 0, 0.6); 
+            
+            border: 2px dashed #d4a373; 
+            border-radius: 8px;
+            
+            padding: 60px 40px;
+            width: 85%;
+            max-width: 1000px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+            transform: scale(0.9); opacity: 0;
+            animation: cardPop 1s ease 0.5s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* GAMBAR img.jpg PADA KAD DENGAN OPACITY 35% */
+        .official-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('img.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.35; 
+            z-index: 1;
+        }
+
+        .official-card::after {
+            content: '';
+            position: absolute;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 1px dashed rgba(212, 163, 115, 0.6);
+            pointer-events: none;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        .official-card > * {
+            position: relative;
+            z-index: 3;
+        }
+
+        @keyframes cardPop { to { transform: scale(1); opacity: 1; } }
+
+        h1 { 
+            color: #f0f0f0; 
+            font-family: 'Montserrat', sans-serif; text-transform: uppercase; 
+            font-weight: 900; margin: 0 0 30px 0; line-height: 1.3; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); 
+            font-size: clamp(1.5rem, 4vw, 3.2rem); letter-spacing: 2px; 
+        }
+        
+        .separator-line { 
+            width: 150px; height: 3px; 
+            background: #d4a373; 
+            margin: 0 auto 30px auto; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+        }
+
+        .vip-section { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .vip-label { font-size: 1rem; color: #b0c4de; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.9); }
+        
+        .vip-name { 
+            font-family: 'Montserrat', sans-serif; font-size: clamp(1.2rem, 3vw, 2.2rem); 
+            color: #e0a96d; 
+            font-weight: 800; text-transform: uppercase; 
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9); margin: 5px 0; 
+        }
+        
+        .vip-role { font-size: 1.2rem; color: #fff; font-weight: 400; opacity: 0.9; text-transform: capitalize; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);}
+
+        /* RESPONSIVE MOBILE STYLES */
+        @media screen and (max-width: 850px) { 
+            .official-card { padding: 40px 30px; width: 90%; }
+            h1 { font-size: 1.8rem; margin-bottom: 20px; line-height: 1.4; letter-spacing: 1px; }
+            .separator-line { margin-bottom: 20px; width: 100px; }
+            .vip-label { font-size: 0.85rem; letter-spacing: 2px; }
+            .vip-name { font-size: 1.3rem; }
+            .vip-role { font-size: 1rem; }
+        }
+
+        @media screen and (max-width: 480px) { 
+            .official-card { padding: 30px 20px; width: 92%; }
+            h1 { font-size: 1.4rem; margin-bottom: 15px; }
+            .separator-line { margin-bottom: 15px; width: 80px; height: 2px; }
+            .vip-label { font-size: 0.75rem; letter-spacing: 1.5px; }
+            .vip-name { font-size: 1.1rem; }
+            .vip-role { font-size: 0.9rem; }
+            
+            #exit-btn { top: 15px; right: 15px; width: 35px; height: 35px; font-size: 1rem; }
+        }
+
+        @media screen and (max-height: 500px) {
+            .official-card { padding: 20px 15px; flex-direction: column; justify-content: center; }
+            h1 { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.2; }
+            .separator-line { margin-bottom: 10px; }
+            .vip-section { gap: 5px; }
+            .vip-name { font-size: 1.1rem; margin: 0; }
+            .vip-role { font-size: 0.9rem; }
+            #exit-btn { top: 10px; right: 10px; width: 30px; height: 30px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body> 
+    <div id="setup-overlay" onclick="startScene()">
+        <img src="ppp.jpg" alt="ppp" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    
+    <div id="exit-btn" onclick="exitSystem(event)">X</div>
+
+    <audio id="final-sound" preload="auto"><source src="audio3.mp3" type="audio/mpeg"></audio>
+
+    <div id="main-container" onclick="handleScreenClick(event)">
+        
+        <video id="vid-place" class="fullscreen-video" src="place.mp4" playsinline loop preload="auto"></video>
+        
+        <video id="vid-access" class="fullscreen-video" src="access.mp4" playsinline preload="auto"></video>
+
+        <video id="vid-main" class="fullscreen-video" src="video.mp4" playsinline preload="auto"></video>
+
+        <div id="official-card-container">
+            <div class="official-card">
+                <h1>MAJLIS SAMBUTAN HARI PENOLONG PEGAWAI PERUBATAN</h1>
+                <div class="separator-line"></div>
+                <div class="vip-section">
+                    <div class="vip-label">DIRASMIKAN OLEH</div>
+                    <div class="vip-name">DR SELVANAAYAGAM SHANMUGANATHAN</div>
+                    <div class="vip-role">Pengarah Hospital Baling</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const vidPlace = document.getElementById('vid-place');
+        const vidAccess = document.getElementById('vid-access');
+        const vidMain = document.getElementById('vid-main');
+        const finalSound = document.getElementById('final-sound');
+        const cardContainer = document.getElementById('official-card-container');
+        const exitBtn = document.getElementById('exit-btn');
+
+        let currentPhase = 0; 
+
+        function startScene() {
+            document.getElementById('setup-overlay').style.display = 'none';
+            exitBtn.style.opacity = '1'; 
+            
+            vidPlace.load();
+            vidAccess.load();
+            vidMain.load();
+            finalSound.load();
+
+            finalSound.volume = 0;
+            finalSound.play().then(() => {
+                finalSound.pause();
+                finalSound.currentTime = 0;
+                finalSound.volume = 1;
+            }).catch(e => console.log("Audio unlock muted"));
+
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) { elem.requestFullscreen().catch(err => {}); } 
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
+            
+            currentPhase = 1; 
+            vidPlace.style.display = 'block';
+            vidPlace.play();
+        }
+
+        function handleScreenClick(event) {
+            if (currentPhase === 1) {
+                vidPlace.pause();
+                vidPlace.style.display = 'none';
+                
+                currentPhase = 2;
+                vidAccess.style.display = 'block';
+                vidAccess.currentTime = 0; 
+                vidAccess.play();
+            } 
+            else if (currentPhase === 4) {
+                exitSystem(event);
+            }
+        }
+
+        vidAccess.addEventListener('ended', function() {
+            if (currentPhase === 2) {
+                vidAccess.style.display = 'none';
+                
+                currentPhase = 3;
+                vidMain.style.display = 'block'; 
+                vidMain.currentTime = 0;
+                vidMain.play();
+            }
+        });
+
+        vidMain.addEventListener('ended', function() {
+            if (currentPhase === 3) {
+                vidMain.style.display = 'none';
+                
+                currentPhase = 4; 
+                showOfficialCard();
+            }
+        });
+
+        function showOfficialCard() {
+            cardContainer.style.display = 'flex';
+            void cardContainer.offsetWidth; 
+            cardContainer.style.opacity = '1';
+            
+            finalSound.play().catch(e => console.log("Audio play failed"));
+        }
+
+        function exitSystem(e) {
+            if (e) e.stopPropagation(); 
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            try { window.open('', '_self', ''); window.close(); } catch(err) {}
+            document.body.innerHTML = ""; document.body.style.background = "black";
+            setTimeout(() => { window.location.href = "about:blank"; }, 1000);
+        }
+    </script>
+</body>
+</html>
