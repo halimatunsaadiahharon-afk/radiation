@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ASAS & MOBILE OPTIMIZATION --- */
         body, html { 
             margin: 0; padding: 0; height: 100%; 
             font-family: 'Montserrat', sans-serif; 
@@ -16,14 +15,9 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* FIX UNTUK MOBILE: Gambar ppp.jpg sentiasa penuh skrin */
         #setup-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; 
-        }
-        #setup-overlay img {
-            width: 100%; height: 100%; object-fit: cover; /* Ini memastikan gambar tidak penyek di mobile */
-            object-position: center;
         }
 
         #exit-btn {
@@ -44,7 +38,7 @@
             display: none; z-index: 1;
         }
 
-        /* --- 10 ANIMASI BUKU KORPORAT (30 SAAT) --- */
+        /* --- BAHAGIAN BARU: 10 ANIMASI DALAM 30 SAAT (FAST & CORPORATE) --- */
         #book-launch-layer {
             display: none; justify-content: center; align-items: center;
             z-index: 20; background: radial-gradient(circle, #0d1b33 0%, #000 100%);
@@ -52,10 +46,8 @@
         }
 
         .book-container {
-            width: 75vw; /* Lebih responsif untuk mobile */
-            max-width: 320px;
-            height: auto;
-            aspect-ratio: 320/460;
+            width: 320px;
+            height: 460px;
             position: relative;
             transform-style: preserve-3d;
             opacity: 0;
@@ -63,33 +55,62 @@
         }
 
         .book-img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             box-shadow: 0 0 80px rgba(0, 150, 255, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 5px;
         }
 
+        /* KESAN CAHAYA "SCANNING" YANG PANTAS */
+        .scan-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 254, 0.3), transparent);
+            transform: translateY(-100%);
+            animation: scanLine 2s linear infinite 5s; /* Bermula selepas intro */
+            z-index: 3;
+        }
+        @keyframes scanLine { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+
+        /* SIFAR PERTAMA: SIRI 10 KESAN (TEN STAGES) */
         .corporate-montage {
             animation: 
-                st1 3s ease-out forwards, st2 3s linear 3s forwards,
-                st3 3s ease-in-out 6s forwards, st4 3s linear 9s forwards,
-                st5 3s ease 12s forwards, st6 3s ease-in-out 15s forwards,
-                st7 3s ease-out 18s forwards, st8 3s ease-out 21s forwards,
-                st9 3s linear 24s forwards, st10 3s ease-in 27s forwards;
+                stage1_Intro 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+                stage2_SpinFast 3s linear 3s forwards,
+                stage3_FlipY 3s ease-in-out 6s forwards,
+                stage4_GlitchZoom 3s linear 9s forwards,
+                stage5_OpticalFlash 3s ease 12s forwards,
+                stage6_FlipX 3s ease-in-out 15s forwards,
+                stage7_TiltShift 3s ease-out 18s forwards,
+                stage8_GlowExpand 3s ease-out 21s forwards,
+                stage9_WobbleRotate 3s linear 24s forwards,
+                stage10_ZoomOutFade 3s cubic-bezier(0.7, 0, 0.3, 1) 27s forwards;
         }
 
-        @keyframes st1 { 0% { opacity: 0; transform: scale(0.3) translateY(600px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes st2 { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
-        @keyframes st3 { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(180deg) translateZ(50px); } }
-        @keyframes st4 { 0% { transform: scale(1); } 50% { transform: scale(1.3); filter: contrast(1.5); } 100% { transform: scale(1.1); filter: contrast(1.2); } }
-        @keyframes st5 { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(90deg); filter: brightness(2); } 100% { transform: rotateX(0deg); } }
-        @keyframes st6 { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(180deg); } }
-        @keyframes st7 { 0% { transform: rotateX(10deg); } 100% { transform: rotateX(-10deg) rotateY(-10deg); } }
-        @keyframes st8 { 0% { transform: scale(1); } 100% { transform: scale(1.3); box-shadow: 0 0 100px #0096ff; } }
-        @keyframes st9 { 0%, 100% { transform: scale(1.3) rotateZ(0); } 50% { transform: scale(1.3) rotateZ(5deg); } }
-        @keyframes st10 { 0% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0; transform: scale(0.5) translateY(100px); } }
+        /* Fasa 1 (0-3s): Muncul & Terapung */
+        @keyframes stage1_Intro { 0% { opacity: 0; transform: scale(0.3) translateY(600px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        /* Fasa 2 (3-6s): Pusingan Mendatar Pantas */
+        @keyframes stage2_SpinFast { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+        /* Fasa 3 (6-9s): Balikan menegak (Flip Y) */
+        @keyframes stage3_FlipY { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(180deg) translateZ(50px); } }
+        /* Fasa 4 (9-12s): Kesan Glitch & Mendekat (Zoom) */
+        @keyframes stage4_GlitchZoom { 0% { transform: scale(1) translateZ(50px); filter: contrast(1); } 50% { transform: scale(1.3) translateZ(150px); filter: contrast(1.5); } 100% { transform: scale(1.2) translateZ(100px); filter: contrast(1.2); } }
+        /* Fasa 5 (12-15s): Pusingan X dengan kesan cahaya (Flash) */
+        @keyframes stage5_OpticalFlash { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(90deg) scale(1.1); filter: brightness(2); } 100% { transform: rotateX(0deg); filter: brightness(1); } }
+        /* Fasa 6 (15-18s): Balikan melintang (Flip X) */
+        @keyframes stage6_FlipX { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(180deg); } }
+        /* Fasa 7 (18-21s): Condong drastic (Tilt) */
+        @keyframes stage7_TiltShift { 0% { transform: rotateX(10deg) rotateY(10deg); } 100% { transform: rotateX(-10deg) rotateY(-10deg); } }
+        /* Fasa 8 (21-24s): Cahaya Glow Membesar */
+        @keyframes stage8_GlowExpand { 0% { transform: scale(1.1); } 100% { transform: scale(1.3) translateZ(100px); box-shadow: 0 0 100px rgba(0, 150, 255, 1); } }
+        /* Fasa 9 (24-27s): Goyangan Pantas (Wobble) */
+        @keyframes stage9_WobbleRotate { 0%, 100% { transform: scale(1.3) rotateZ(0deg); } 25% { transform: scale(1.3) rotateZ(5deg); } 75% { transform: scale(1.3) rotateZ(-5deg); } }
+        /* Fasa 10 (27-30s): Zoom Out & Fade-out */
+        @keyframes stage10_ZoomOutFade { 0% { opacity: 1; transform: scale(1.3) translateZ(100px); } 100% { opacity: 0; transform: scale(0.5) translateY(100px); } }
 
-        /* --- WORDING PERASMIAN (LENGKAP) --- */
+
+        /* --- STYLE WORDING (KEKAL SEPERTI SEBELUM INI) --- */
         #official-card-container { 
             display: none; opacity: 0; transition: opacity 1.5s; 
             width: 100%; height: 100%; justify-content: center; align-items: center; 
@@ -97,10 +118,11 @@
         }
         
         .official-card {
-            background: rgba(10, 20, 38, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; padding: 30px; text-align: center;
-            width: 85%; max-width: 1100px;
+            background: rgba(10, 20, 38, 0.9);
+            box-shadow: 0 0 100px rgba(0, 150, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 30px; padding: 60px 40px; text-align: center;
+            backdrop-filter: blur(15px);
         }
 
         .reveal { opacity: 0; transform: translateY(30px); animation: fadeInUp 1s ease forwards; }
@@ -108,25 +130,28 @@
 
         .glow-text {
             background: linear-gradient(90deg, #fff, #4facfe, #00f2fe, #ffd3a5, #fff);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: textShine 5s linear infinite; display: inline-block;
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 5s linear infinite;
+            display: inline-block;
         }
         @keyframes textShine { to { background-position: 200% center; } }
 
-        .conf-title { font-size: clamp(0.7rem, 2vw, 1.5rem); text-transform: uppercase; letter-spacing: 2px; margin: 2px 0; }
+        .conf-title { font-size: clamp(0.9rem, 2.2vw, 1.8rem); text-transform: uppercase; letter-spacing: 3px; margin: 5px 0; }
         .main-theme-box { 
-            font-size: clamp(1.2rem, 4vw, 3.2rem); font-weight: 900; text-transform: uppercase; 
-            margin: 15px 0; line-height: 1.2; color: #fff; 
+            font-size: clamp(1.5rem, 4.5vw, 3.8rem); font-weight: 900; text-transform: uppercase; 
+            margin: 25px 0; line-height: 1.2; color: #fff; 
         }
-        .vip-label { color: #00f2fe; font-size: 0.7rem; letter-spacing: 5px; font-weight: 700; margin-top: 20px; }
-        .vip-name { font-size: clamp(1rem, 3vw, 2.2rem); font-weight: 700; margin: 5px 0; color: #fff; }
-        .vip-role { color: #b0c4de; font-size: 0.9rem; font-weight: 300; }
+        .vip-label { color: #00f2fe; font-size: 0.9rem; letter-spacing: 8px; font-weight: 700; margin-top: 35px; }
+        .vip-name { font-size: clamp(1.4rem, 3.2vw, 2.6rem); font-weight: 700; margin: 10px 0; color: #fff; }
+        .vip-role { color: #b0c4de; font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; }
     </style>
 </head>
 <body> 
 
     <div id="setup-overlay" onclick="startScene()">
-        <img src="ppp.jpg" alt="ppp">
+        <img src="ppp.jpg" alt="ppp" style="width: 100%; height: 100%; object-fit: cover;">
     </div>
     
     <div id="exit-btn" onclick="exitSystem(event)">X</div>
@@ -140,19 +165,21 @@
 
         <div id="book-launch-layer" class="fullscreen-content">
             <div id="book-obj" class="book-container">
+                <div class="scan-overlay"></div>
                 <img src="cover.jpg" class="book-img" alt="Cover">
             </div>
         </div>
 
         <div id="official-card-container">
             <div class="official-card">
+                
                 <div class="reveal" style="animation-delay: 0.5s;">
                     <div class="conf-title">6th International Conference On</div>
                     <div class="conf-title" style="font-weight: 700;">Radiation Safety and Security In</div>
                     <div class="conf-title" style="font-weight: 900;">Healthcare Services (ICoRSSIHS) 2026</div>
                 </div>
                 
-                <div class="reveal" style="width: 80px; height: 2px; background: rgba(255,255,255,0.2); margin: 15px auto; animation-delay: 1s;"></div>
+                <div class="reveal" style="width: 100px; height: 2px; background: rgba(255,255,255,0.2); margin: 20px auto; animation-delay: 1s;"></div>
                 
                 <div class="reveal main-theme-box" style="animation-delay: 1.8s;">
                     <span class="glow-text">Synergizing Science, Technology<br>And Clinical Practice Through AI</span>
@@ -160,9 +187,10 @@
 
                 <div class="reveal" style="animation-delay: 3s;">
                     <div class="vip-label">DIRASMIKAN OLEH</div>
-                    <div class="vip-name">DR ...</div>
-                    <div class="vip-role">Pengarah ....</div>
+                    <div class="vip-name">DR SELVANAAYAGAM SHANMUGANATHAN</div>
+                    <div class="vip-role">Pengarah Hospital Baling</div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -184,11 +212,8 @@
             exitBtn.style.opacity = '1'; 
             currentPhase = 1; 
             vidPlace.style.display = 'block'; vidPlace.play();
+            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
             
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) { elem.requestFullscreen().catch(err => {}); } 
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
-
             [bookSound, finalSound].forEach(s => {
                 s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(() => {});
             });
@@ -207,14 +232,17 @@
             vidAccess.style.display = 'none';
             currentPhase = 3;
             bookLayer.style.display = 'flex';
+            
+            // Masukkan kelas animasi korporat
             bookObj.classList.add('corporate-montage');
             bookSound.play();
 
+            // TIMER BARU: TEPAT 30 SAAT
             setTimeout(() => {
-                bookSound.pause(); 
+                bookSound.pause(); bookSound.currentTime = 0;
                 bookLayer.style.display = 'none';
                 showOfficialCard();
-            }, 30000); 
+            }, 30000); // 30,000ms = 30 saat
         };
 
         function showOfficialCard() {
