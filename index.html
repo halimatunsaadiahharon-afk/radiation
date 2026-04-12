@@ -17,6 +17,7 @@
         #setup-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            cursor: pointer;
         }
         #setup-overlay img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
 
@@ -36,15 +37,15 @@
         }
 
         .display-screen {
-            width: 280px; height: 60px;
-            background: rgba(0, 0, 0, 0.5);
+            width: 320px; height: 80px;
+            background: rgba(0, 0, 0, 0.7);
             border: 2px solid #00f2fe;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem; color: #00f2fe;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            font-size: 2rem; color: #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
         }
 
         .keypad-grid {
@@ -64,26 +65,25 @@
         }
 
         .key:active { background: #00f2fe; color: #000; transform: scale(0.9); }
-        .key.clear { color: #ff4b2b; border-color: #ff4b2b; }
 
         /* ACCESS GRANTED ANIMATION */
         #status-msg {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-family: 'Orbitron', sans-serif;
-            font-size: 3rem; font-weight: 900; color: #00ff00;
-            text-shadow: 0 0 20px #00ff00;
+            font-size: 3.5rem; font-weight: 900; color: #00ff00;
+            text-shadow: 0 0 30px #00ff00;
             display: none; z-index: 200;
             text-align: center;
         }
 
-        /* WORDING PERASMIAN */
+        /* WORDING PERASMIAN (UPDATED: PERASMI REMOVED) */
         #official-card-container { 
             display: none; opacity: 0; transition: opacity 2s; 
             width: 100%; height: 100%; justify-content: center; align-items: center; 
-            position: absolute; top: 0; left: 0; z-index: 300; background: #050a14;
+            position: absolute; top: 0; left: 0; z-index: 400; background: #050a14;
         }
         
-        .official-card { background: rgba(10, 20, 38, 0.95); border-radius: 20px; padding: 30px; text-align: center; width: 85%; max-width: 1000px; border: 1px solid rgba(255,255,255,0.1); }
+        .official-card { background: rgba(10, 20, 38, 0.95); border-radius: 20px; padding: 50px; text-align: center; width: 85%; max-width: 1100px; border: 1px solid rgba(255,255,255,0.1); }
         .reveal { opacity: 0; transform: translateY(20px); animation: fadeInUp 1s ease forwards; }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
@@ -94,9 +94,8 @@
         }
         @keyframes textShine { to { background-position: 200% center; } }
 
-        .conf-title { font-size: clamp(0.7rem, 2vw, 1.5rem); text-transform: uppercase; letter-spacing: 2px; }
-        .main-theme-box { font-size: clamp(1.2rem, 4vw, 3.2rem); font-weight: 900; text-transform: uppercase; margin: 15px 0; }
-        .vip-name { font-size: clamp(1.1rem, 3vw, 2.2rem); font-weight: 700; margin: 5px 0; color: #fff; }
+        .conf-title { font-size: clamp(0.9rem, 2.5vw, 1.8rem); text-transform: uppercase; letter-spacing: 3px; line-height: 1.4; }
+        .main-theme-box { font-size: clamp(1.5rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase; margin: 30px 0; }
     </style>
 </head>
 <body> 
@@ -106,29 +105,30 @@
         <p style="position: absolute; color: white; letter-spacing: 5px; font-weight: bold; bottom: 15%;">KLIK UNTUK MULA</p>
     </div>
     
-    <audio id="beep-sound"><source src="https://www.soundjay.com/buttons/button-16.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-code" loop><source src="audiocode.mp3" type="audio/mpeg"></audio>
     <audio id="success-sound"><source src="https://www.soundjay.com/buttons/button-09.mp3" type="audio/mpeg"></audio>
     <audio id="final-sound" preload="auto"><source src="audio3.mp3" type="audio/mpeg"></audio>
 
     <div id="main-container">
         <video id="video-1" class="fullscreen-content" src="video1.mp4" playsinline></video>
+        <video id="video-access" class="fullscreen-content" src="access.mp4" playsinline></video>
 
         <div id="keypad-container" class="fullscreen-content">
-            <div style="margin-bottom: 20px; letter-spacing: 3px; color: #00f2fe;">SILA MASUKKAN KOD AKSES</div>
-            <div class="display-screen" id="pin-display">****</div>
+            <div style="margin-bottom: 20px; letter-spacing: 3px; color: #00f2fe; font-weight: bold;">TEKAN MANA-MANA UNTUK AKSES</div>
+            <div class="display-screen" id="pin-display"></div>
             <div class="keypad-grid">
-                <div class="key" onclick="pressKey('1')">1</div>
-                <div class="key" onclick="pressKey('2')">2</div>
-                <div class="key" onclick="pressKey('3')">3</div>
-                <div class="key" onclick="pressKey('4')">4</div>
-                <div class="key" onclick="pressKey('5')">5</div>
-                <div class="key" onclick="pressKey('6')">6</div>
-                <div class="key" onclick="pressKey('7')">7</div>
-                <div class="key" onclick="pressKey('8')">8</div>
-                <div class="key" onclick="pressKey('9')">9</div>
-                <div class="key clear" onclick="clearPin()">C</div>
-                <div class="key" onclick="pressKey('0')">0</div>
-                <div class="key" onclick="checkPin()" style="color: #00f2fe;">OK</div>
+                <div class="key" onclick="handleAccessClick()">1</div>
+                <div class="key" onclick="handleAccessClick()">2</div>
+                <div class="key" onclick="handleAccessClick()">3</div>
+                <div class="key" onclick="handleAccessClick()">4</div>
+                <div class="key" onclick="handleAccessClick()">5</div>
+                <div class="key" onclick="handleAccessClick()">6</div>
+                <div class="key" onclick="handleAccessClick()">7</div>
+                <div class="key" onclick="handleAccessClick()">8</div>
+                <div class="key" onclick="handleAccessClick()">9</div>
+                <div class="key" onclick="handleAccessClick()">*</div>
+                <div class="key" onclick="handleAccessClick()">0</div>
+                <div class="key" onclick="handleAccessClick()">#</div>
             </div>
         </div>
 
@@ -138,101 +138,76 @@
             <div class="official-card">
                 <div class="reveal" style="animation-delay: 0.5s;">
                     <div class="conf-title">6th International Conference On</div>
-                    <div class="conf-title" style="font-weight: 700;">Radiation Safety and Security In Healthcare Services (ICoRSSIHS) 2026</div>
+                    <div class="conf-title" style="font-weight: 700; color: #00f2fe;">Radiation Safety and Security In Healthcare Services (ICoRSSIHS) 2026</div>
                 </div>
+                
                 <div class="reveal main-theme-box" style="animation-delay: 1.5s;">
                     <span class="glow-text">Synergizing Science, Technology<br>And Clinical Practice Through AI</span>
                 </div>
-                <div class="reveal" style="animation-delay: 2.5s;">
-                    <div style="color: #00f2fe; letter-spacing: 5px; font-size: 0.8rem;">DIRASMIKAN OLEH</div>
-                    <div class="vip-name">DR SELVANAAYAGAM SHANMUGANATHAN</div>
-                    <div style="color: #b0c4de; font-size: 0.9rem;">Pengarah Hospital Baling</div>
+
                 </div>
-            </div>
         </div>
     </div>
 
     <script>
         const video1 = document.getElementById('video-1');
+        const videoAccess = document.getElementById('video-access');
         const keypadContainer = document.getElementById('keypad-container');
         const pinDisplay = document.getElementById('pin-display');
         const statusMsg = document.getElementById('status-msg');
         const cardContainer = document.getElementById('official-card-container');
         
-        const beepSound = document.getElementById('beep-sound');
+        const audioCode = document.getElementById('audio-code');
         const successSound = document.getElementById('success-sound');
         const finalSound = document.getElementById('final-sound');
 
-        let enteredPin = "";
-        const CORRECT_PIN = "0000"; // TUKAR KOD DI SINI
+        let isTriggered = false;
 
         function startGimmick() {
             document.getElementById('setup-overlay').style.display = 'none';
+            audioCode.play().then(() => { audioCode.pause(); });
             
-            // Masuk Fullscreen
             const elem = document.documentElement;
             if (elem.requestFullscreen) { elem.requestFullscreen(); }
             
-            // Play Video 1
             video1.style.display = 'block';
             video1.play();
         }
 
-        // Apabila Video 1 Tamat, Tunjuk Keypad
         video1.onended = () => {
             video1.style.display = 'none';
             keypadContainer.style.display = 'flex';
+            audioCode.currentTime = 0;
+            audioCode.play();
         };
 
-        function pressKey(num) {
-            if (enteredPin.length < 4) {
-                enteredPin += num;
-                updateDisplay();
-                beepSound.currentTime = 0;
-                beepSound.play();
-            }
-        }
+        function handleAccessClick() {
+            if (isTriggered) return;
+            isTriggered = true;
 
-        function clearPin() {
-            enteredPin = "";
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            // Menunjukkan bintang untuk privasi
-            pinDisplay.innerText = enteredPin.split('').map(() => '*').join('') || "****";
-        }
-
-        function checkPin() {
-            if (enteredPin === CORRECT_PIN) {
-                keypadContainer.style.opacity = '0.3';
-                keypadContainer.style.pointerEvents = 'none';
+            audioCode.pause();
+            pinDisplay.innerText = "****";
+            successSound.play();
+            
+            keypadContainer.style.opacity = '0.4';
+            keypadContainer.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                statusMsg.style.display = 'block';
                 
-                successSound.play();
-                
-                // Tunjuk Access Granted
                 setTimeout(() => {
-                    statusMsg.style.display = 'block';
-                    
-                    // Selepas 3 saat, tunjuk wording
-                    setTimeout(() => {
-                        statusMsg.style.display = 'none';
-                        keypadContainer.style.display = 'none';
-                        showOfficialCard();
-                    }, 3000);
-                    
-                }, 500);
-            } else {
-                // Kod Salah
-                pinDisplay.style.color = "red";
-                pinDisplay.innerText = "ERROR";
-                setTimeout(() => {
-                    enteredPin = "";
-                    pinDisplay.style.color = "#00f2fe";
-                    updateDisplay();
-                }, 1000);
-            }
+                    statusMsg.style.display = 'none';
+                    keypadContainer.style.display = 'none';
+                    videoAccess.style.display = 'block';
+                    videoAccess.play();
+                }, 1500);
+            }, 300);
         }
+
+        videoAccess.onended = () => {
+            videoAccess.style.display = 'none';
+            showOfficialCard();
+        };
 
         function showOfficialCard() {
             cardContainer.style.display = 'flex';
