@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimik Pelancaran Kemerdekaan Premium</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            user-select: none;
+        }
+
+        /* Latar belakang */
+        #bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('merdeka.jpg');
+            background-size: cover;
+            background-position: center;
+            transition: filter 1s ease, transform 1s ease;
+            z-index: 1;
+        }
+
+        .blur-effect {
+            filter: blur(15px) brightness(0.5); 
+            transform: scale(1.05); 
+        }
+
+        /* Kotak-kotak puzzle */
+        #puzzle-pieces {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+        }
+
+        .piece {
+            position: absolute;
+            background-color: #0a0a0a; 
+            border: 1px solid #1a1a1a;
+            transition: opacity 0.3s ease, transform 0.5s ease;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        /* Container Teks Merdeka */
+        #text-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        /* Gaya asas untuk semua teks Merdeka */
+        .merdeka-text {
+            position: absolute;
+            left: 50%;
+            text-align: center;
+            font-weight: 900;
+            font-style: italic;
+            white-space: nowrap;
+            opacity: 0; /* Tersembunyi pada awalnya */
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        /* Teks Atas (Laungan 1) */
+        #msg1 {
+            top: 35%;
+            font-size: 8vw;
+            color: #d4af37; /* Emas sedikit gelap */
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
+            z-index: 11;
+            --target-scale: 0.8;
+        }
+
+        /* Teks Bawah (Laungan 2) */
+        #msg3 {
+            top: 65%;
+            font-size: 9vw;
+            color: #e6c200; /* Emas sederhana */
+            text-shadow: 4px 4px 12px rgba(0,0,0,0.8);
+            z-index: 12;
+            --target-scale: 0.9;
+        }
+
+        /* Teks Tengah (Laungan 3 - Paling Besar) */
+        #msg2 {
+            top: 50%;
+            font-size: 14vw;
+            color: #FFD700; /* Emas menyala */
+            text-shadow: 5px 5px 0px #b8860b, 10px 10px 30px rgba(0,0,0,0.9), 0 0 50px rgba(255, 0, 0, 0.7);
+            z-index: 15;
+            --target-scale: 1.1;
+        }
+
+        /* Kelas untuk trigger animasi */
+        .show-text {
+            animation: bounceIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(var(--target-scale)); }
+        }
+
+        /* Animasi Konfeti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            z-index: 5;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+
+        /* Video MP4 */
+        #merdekaVideo {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 20; 
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bunyiLaungan" src="laungan_merdeka.mp3"></audio>
+
+    <div id="bg-image"></div>
+    <div id="puzzle-pieces"></div>
+
+    <!-- Container untuk efek teks bertindih -->
+    <div id="text-container">
+        <div id="msg1" class="merdeka-text">MERDEKA!</div>
+        <div id="msg3" class="merdeka-text">MERDEKA!</div>
+        <div id="msg2" class="merdeka-text">MERDEKA!</div>
+    </div>
+
+    <video id="merdekaVideo" src="lagu_merdeka.mp4"></video>
+
+    <script>
+        const bgImage = document.getElementById('bg-image');
+        const puzzleContainer = document.getElementById('puzzle-pieces');
+        const textContainer = document.getElementById('text-container');
+        const video = document.getElementById('merdekaVideo');
+        const laungan = document.getElementById('bunyiLaungan');
+        
+        const rows = 3; 
+        const cols = 3; 
+        let pieces = [];
+
+        // Hasilkan kotak puzzle
+        for(let r = 0; r < rows; r++) {
+            for(let c = 0; c < cols; c++) {
+                let piece = document.createElement('div');
+                piece.className = 'piece';
+                piece.style.width = (100 / cols) + 'vw';
+                piece.style.height = (100 / rows) + 'vh';
+                piece.style.top = (r * (100 / rows)) + 'vh';
+                piece.style.left = (c * (100 / cols)) + 'vw';
+                puzzleContainer.appendChild(piece);
+                pieces.push(piece);
+            }
+        }
+
+        pieces.sort(() => Math.random() - 0.5);
+        let clickCount = 0;
+        
+        // Klik Kotak Hitam
+        puzzleContainer.addEventListener('click', () => {
+            if(clickCount < pieces.length) {
+                pieces[clickCount].style.opacity = '0';
+                pieces[clickCount].style.transform = 'scale(1.5)';
+                clickCount++;
+            }
+            
+            // Klik Terakhir (Mula Sequence)
+            if(clickCount === pieces.length) {
+                setTimeout(() => {
+                    puzzleContainer.style.display = 'none';
+                    bgImage.classList.add('blur-effect');
+                    textContainer.style.display = 'block';
+                    
+                    // Mulakan letupan siri laungan
+                    playNextShout();
+                }, 500); 
+            }
+        });
+
+        // --- SISTEM SIRI LAUNGAN 3 KALI ---
+        let shoutCount = 0;
+
+        function playNextShout() {
+            // Reset audio ke minit 0 setiap kali dimainkan
+            laungan.currentTime = 0; 
+
+            if (shoutCount === 0) {
+                // Laungan 1: Keluar Teks Atas
+                document.getElementById('msg1').classList.add('show-text');
+                laungan.play();
+                createConfetti(); // Tembak konfeti sikit
+
+            } else if (shoutCount === 1) {
+                // Laungan 2: Keluar Teks Bawah
+                document.getElementById('msg3').classList.add('show-text');
+                laungan.play();
+                createConfetti(); // Tembak lagi
+
+            } else if (shoutCount === 2) {
+                // Laungan 3: Keluar Teks Tengah (Klimaks)
+                document.getElementById('msg2').classList.add('show-text');
+                laungan.play();
+                createConfetti(); 
+                createConfetti(); // Double letupan konfeti
+
+            } else if (shoutCount === 3) {
+                // Selepas habis ketiga-tiga laungan, masuk video lagu
+                textContainer.style.display = 'none'; 
+                bgImage.style.display = 'none'; 
+                video.style.display = 'block'; 
+                video.play(); 
+                return; // Tamatkan fungsi
+            }
+            shoutCount++;
+        }
+
+        // Dengar apabila audio laungan tamat, ia akan panggil fungsi di atas secara automatik
+        laungan.onended = playNextShout;
+
+        // Fungsi Jana Konfeti Warna-Warni
+        function createConfetti() {
+            const colors = ['#e62020', '#1f51ff', '#ffd700', '#ffffff']; // Warna bendera Malaysia
+            for(let i = 0; i < 40; i++) {
+                let conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = (Math.random() * 20 - 20) + 'vh'; // Jatuh dari atas luar skrin
+                conf.style.animationDuration = (Math.random() * 2 + 2) + 's'; // Kelajuan berbeza
+                textContainer.appendChild(conf);
+            }
+        }
+    </script>
+</body>
+</html>
